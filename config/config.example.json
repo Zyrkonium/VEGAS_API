@@ -1,0 +1,14 @@
+{
+	"database": {
+		"hostname": "localhost",
+		"user": "user",
+		"password": "password",
+		"port": 3306,
+		"database": "database"
+	},
+	"server": {
+		"port": 3001
+	},
+	"webhook_url": "https://discord.com/api/webhooks/xxx/yyyyyyyyyy",
+	"embed": {}
+}
