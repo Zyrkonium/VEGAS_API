@@ -11,13 +11,11 @@ git clone ...
 2. Install dependencies
 
 ```bash
-npm install
+yarn
 ```
 
-3. Execute init script
+3. Start
 
 ```bash
-npm run init
+yarn start
 ```
-
-This script will ask you mysql informations (if not in the `config/config.json` file, create the database and create a configuration file if required, by following the `config/config.example.json` template.
