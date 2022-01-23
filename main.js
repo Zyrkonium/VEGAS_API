@@ -4,9 +4,18 @@ global.reqlib = require("app-root-path").require;
 const config = reqlib("/config/config.json");
 
 // Server
+const fs = require("fs");
+const http = require("http");
+const https = require("https");
 const express = require("express");
+
 const app = express();
-const httpServer = require("http").Server(app);
+
+// SSL
+const privateKey = fs.readFileSync("ssl/key.pem", "utf8");
+const certificate = fs.readFileSync("ssl/cert.pem", "utf8");
+
+var credentials = { key: privateKey, cert: certificate };
 
 // Post request params
 app.use(express.json());
@@ -25,7 +34,11 @@ reqlib("/router")(app);
 const normalizePort = (val) => {
 	return parseInt(val, 10);
 };
-const port = normalizePort(process.env.PORT || config.server.port);
+const HTTPport = normalizePort(process.env.HTTPPORT || config.server.port.http);
+const HTTPSport = normalizePort(process.env.PORT || config.server.port.https);
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
 
 // Handle errors
 const errorHandler = (error) => {
@@ -49,11 +62,8 @@ const errorHandler = (error) => {
 };
 httpServer.on("error", errorHandler);
 
-httpServer.listen(port, function () {
-	const address = httpServer.address();
-	const bind = typeof address === "string" ? "pipe " + address : "port " + port;
-	console.log("Listening on " + bind);
-});
+httpServer.listen(HTTPport);
+httpsServer.listen(HTTPSport);
 
 // Connect to db and store connection in global var if succeeded
 reqlib("/utils/dbconnect")()
